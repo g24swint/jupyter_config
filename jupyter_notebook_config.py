@@ -514,21 +514,20 @@
 # - path: the filesystem path to the file just written - model: the model
 # representing the file - contents_manager: this ContentsManager instance
 
-import os
-from subprocess import check_call
-
 c = get_config()
 
 def post_save(model, os_path, contents_manager):
   """post_save hook for converting notebooks to .py scripts"""
+  import os
+  from subprocess import check_call
+
   if model['type'] != 'notebook':
     return
   d, fname = os.path.split(os_path)
-  check.call(['ipython', 'nbconvert', '--to', 'script', fname], cwd=d)
+  check_call(['jupyter', 'nbconvert', '--to', 'script', fname], cwd=d)
 
 c.FileContentsManager.post_save_hook = post_save
 
-c.FileContentsManager.post_save_hook = None
 
 #------------------------------------------------------------------------------
 # NotebookNotary configuration
